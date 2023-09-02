@@ -23,7 +23,7 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.body.id)
+  Card.findByIdAndRemove(req.params.id)
     .then((card) => {
       if (card === null) {
         res.status(404).send({ message: `Карточка с указанным ${req.params.id} не найдена.` });
@@ -31,7 +31,7 @@ module.exports.deleteCard = (req, res) => {
         res.send({ data: card });
       }
     })
-    .catch(() => res.status(500).send());
+    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при лайке карточки.' }));
 };
 
 module.exports.putCardLike = (req, res) => {
