@@ -21,3 +21,19 @@ module.exports.deleteCard = (req, res) => {
     .then((card) => res.send({ data: card }))
     .catch((error) => res.status(500).send({ message: `Не удалось удалить карточку ${error}` }));
 };
+
+module.exports.putCardLike = (req, res) => {
+  // eslint-disable-next-line no-underscore-dangle
+  const owner = req.user._id;
+  Card.findByIdAndUpdate(req.body.id, { $addToSet: { likes: owner } })
+    .then((card) => res.send({ data: card }))
+    .catch((error) => res.status(500).send({ message: `Не удалось лайкнуть карточку ${error}` }));
+};
+
+module.exports.deleteCardLike = (req, res) => {
+  // eslint-disable-next-line no-underscore-dangle
+  const owner = req.user._id;
+  Card.findByIdAndUpdate(req.body.id, { $pull: { likes: owner } })
+    .then((card) => res.send({ data: card }))
+    .catch((error) => res.status(500).send({ message: `Не удалось лайкнуть карточку ${error}` }));
+};

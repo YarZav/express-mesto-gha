@@ -18,3 +18,21 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((error) => res.status(500).send({ message: `Не удалось создать пользователя ${error}` }));
 };
+
+module.exports.patchUsersMe = (req, res) => {
+  // eslint-disable-next-line no-underscore-dangle
+  const id = req.user._id;
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(id, { name, about })
+    .then((user) => res.send({ data: user }))
+    .catch((error) => res.status(500).send({ message: `Не удалось обновить пользователя ${error}` }));
+};
+
+module.exports.patchUsersMeAvatar = (req, res) => {
+  // eslint-disable-next-line no-underscore-dangle
+  const id = req.user._id;
+  const { avatar } = req.body;
+  User.findByIdAndUpdate(id, { avatar })
+    .then((user) => res.send({ data: user }))
+    .catch((error) => res.status(500).send({ message: `Не удалось обновить пользователя ${error}` }));
+};
