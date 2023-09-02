@@ -40,12 +40,12 @@ module.exports.putCardLike = (req, res) => {
   Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: owner } })
     .then((card) => {
       if (card === null) {
-        res.status(404).end();
+        res.status(404).send({ message: `Карточка с указанным ${req.params.id} не найдена.` });
       } else {
-        res.status(201).end();
+        res.status(201).send(card);
       }
     })
-    .catch(() => res.status(400).end());
+    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при лайке карточки.' }));
 };
 
 module.exports.deleteCardLike = (req, res) => {
@@ -54,10 +54,10 @@ module.exports.deleteCardLike = (req, res) => {
   Card.findByIdAndUpdate(req.params.id, { $pull: { likes: owner } })
     .then((card) => {
       if (card === null) {
-        res.status(404).end();
+        res.status(404).send({ message: `Карточка с указанным ${req.params.id} не найдена.` });
       } else {
-        res.status(200).end();
+        res.status(200).send(card);
       }
     })
-    .catch(() => res.status(400).end());
+    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при лайке карточки.' }));
 };

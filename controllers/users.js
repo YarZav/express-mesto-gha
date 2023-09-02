@@ -10,12 +10,12 @@ module.exports.getUser = (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user === null) {
-        res.status(404).end();
+        res.status(404).send({ message: `Пользователь по указанному ${req.params.id} не найден.` });
       } else {
         res.send({ data: user });
       }
     })
-    .catch(() => res.status(400).end());
+    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при получении пользователя.' }));
 };
 
 module.exports.createUser = (req, res) => {
