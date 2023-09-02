@@ -37,27 +37,27 @@ module.exports.deleteCard = (req, res) => {
 module.exports.putCardLike = (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   const owner = req.user._id;
-  Card.findByIdAndUpdate(req.body.id, { $addToSet: { likes: owner } })
+  Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: owner } })
     .then((card) => {
       if (card === null) {
-        res.status(400).send();
+        res.status(404).send();
       } else {
         res.status(201).send();
       }
     })
-    .catch(() => res.status(500).send());
+    .catch(() => res.status(400).send());
 };
 
 module.exports.deleteCardLike = (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   const owner = req.user._id;
-  Card.findByIdAndUpdate(req.body.id, { $pull: { likes: owner } })
+  Card.findByIdAndUpdate(req.params.id, { $pull: { likes: owner } })
     .then((card) => {
       if (card === null) {
-        res.status(404).send({ message: `Передан несуществующий ${req.body.id} карточки` });
+        res.status(404).send();
       } else {
         res.send({ data: card });
       }
     })
-    .catch(() => res.status(500).send());
+    .catch(() => res.status(400).send());
 };
