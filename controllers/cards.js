@@ -56,7 +56,7 @@ module.exports.deleteCardLike = (req, res) => {
       if (card === null) {
         res.status(404).send();
       } else {
-        res.send({ data: card });
+        res.status(201).send();
       }
     })
     .catch(() => res.status(400).send());
