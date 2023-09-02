@@ -10,7 +10,7 @@ module.exports.getUser = (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user === null) {
-        res.status(404).send({ message: `Пользователь по указанному ${req.params.id} не найден.` });
+        res.status(500).send();
       } else {
         res.send({ data: user });
       }
@@ -40,7 +40,7 @@ module.exports.patchUsersMe = (req, res) => {
       if (user === null) {
         res.status(404).send({ message: `Пользователь по указанному ${req.params.id} не найден.` });
       } else {
-        res.send({ data: user });
+        res.send({ name, about });
       }
     })
     .catch((error) => {
@@ -61,7 +61,7 @@ module.exports.patchUsersMeAvatar = (req, res) => {
       if (user === null) {
         res.status(404).send({ message: `Пользователь по указанному ${req.params.id} не найден.` });
       } else {
-        res.send({ data: user });
+        res.send({ avatar });
       }
     })
     .catch((error) => {
