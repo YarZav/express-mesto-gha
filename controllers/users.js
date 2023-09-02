@@ -10,12 +10,12 @@ module.exports.getUser = (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user === null) {
-        res.status(404).send();
+        res.status(404).end();
       } else {
         res.send({ data: user });
       }
     })
-    .catch(() => res.status(400).send());
+    .catch(() => res.status(400).end());
 };
 
 module.exports.createUser = (req, res) => {
