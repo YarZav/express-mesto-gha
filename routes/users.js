@@ -7,9 +7,9 @@ const {
   patchUsersMeAvatar,
 } = require('../controllers/users');
 
-usersRouter.get('*', getUsers);
+usersRouter.get('', getUsers);
 usersRouter.get('/:id', getUser);
-usersRouter.post('*', createUser);
+usersRouter.post('', createUser);
 usersRouter.patch('/me', patchUsersMe);
 usersRouter.patch('/me/avatar', patchUsersMeAvatar);
 
