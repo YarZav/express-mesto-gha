@@ -46,7 +46,7 @@ module.exports.putCardLike = (req, res) => {
   Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: owner } }, { new: true })
     .orFail()
     .then((card) => res.status(201).send(card))
-    .catch(() => {
+    .catch((error) => {
       if (error.name === 'DocumentNotFoundError') {
         res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
@@ -60,7 +60,7 @@ module.exports.deleteCardLike = (req, res) => {
   Card.findByIdAndUpdate(req.params.id, { $pull: { likes: owner } }, { new: true })
     .orFail()
     .then((card) => res.status(200).send(card))
-    .catch(() => {
+    .catch((error) => {
       if (error.name === 'DocumentNotFoundError') {
         res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {

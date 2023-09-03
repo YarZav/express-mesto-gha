@@ -4,7 +4,7 @@ const ERROR_WRONG_REQUEST_CODE = 500;
 const ERROR_WRONG_PARAMETERS_CODE = 400;
 const ERROR_WRONG_DATA_CODE = 404;
 const ERROR_WRONG_REQUEST_MESSAGE = 'Не удается обработать запрос.';
-const ERROR_WRONG_PARAMETERS_MESSAGE = 'Педаны некорректные данные при создании карточки.';
+const ERROR_WRONG_PARAMETERS_MESSAGE = 'Педаны некорректные данные.';
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
 
 module.exports.getUsers = (req, res) => {
@@ -18,7 +18,7 @@ module.exports.getUser = (req, res) => {
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch((error) => {
-      if (error.name === 'DocumentNotFoundError') {
+      if (error.name === 'CastError') {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE })
       } else {
         res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
