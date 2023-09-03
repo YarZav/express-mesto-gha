@@ -15,14 +15,15 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUser = (req, res) => {
   User.findById(req.params.id)
-    .then((user) => {
-      if (user === null) {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
+    .orFail()
+    .then((user) => res.send({ data: user }))
+    .catch((error) => {
+      if (error.name === 'DocumentNotFoundError') {
+        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE })
       } else {
-        res.send({ data: user });
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       }
-    })
-    .catch(() => res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE }));
+    });
 };
 
 module.exports.createUser = (req, res) => {
@@ -43,16 +44,13 @@ module.exports.patchUsersMe = (req, res) => {
   const id = req.user._id;
   const { name, about } = req.body;
   User.findByIdAndUpdate(id, { name, about }, { new: true, runValidators: true })
-    .then((user) => {
-      if (user === null) {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
-      } else {
-        res.send({ name, about });
-      }
-    })
+    .orFail()
+    .then(() => res.send({ name, about }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+      } else if (error.name === 'DocumentNotFoundError') {
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
         res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
       }
@@ -63,19 +61,15 @@ module.exports.patchUsersMeAvatar = (req, res) => {
   const id = req.user._id;
   const { avatar } = req.body;
   User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
-    .then((user) => {
-      if (user === null) {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
-      } else {
-        res.send({ avatar });
-      }
-    })
+    .orFail()
+    .then(() => res.send({ avatar }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+      } else if (error.name === 'DocumentNotFoundError') {
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
         res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
-
       }
     });
 };

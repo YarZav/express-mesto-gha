@@ -30,38 +30,41 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
-    .then((card) => {
-      if (card === null) {
+    .orFail()
+    .then((card) => res.send({ data: card }))
+    .catch(() => {
+      if (error.name === 'DocumentNotFoundError') {
         res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
-        res.send({ data: card });
+        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE })
       }
-    })
-    .catch(() => res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE }));
+    });
 };
 
 module.exports.putCardLike = (req, res) => {
   const owner = req.user._id;
   Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: owner } }, { new: true })
-    .then((card) => {
-      if (card === null) {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE })
+    .orFail()
+    .then((card) => res.status(201).send(card))
+    .catch(() => {
+      if (error.name === 'DocumentNotFoundError') {
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
-        res.status(201).send(card);
+        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE })
       }
-    })
-    .catch(() => res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE }));
+    });
 };
 
 module.exports.deleteCardLike = (req, res) => {
   const owner = req.user._id;
   Card.findByIdAndUpdate(req.params.id, { $pull: { likes: owner } }, { new: true })
-    .then((card) => {
-      if (card === null) {
+    .orFail()
+    .then((card) => res.status(200).send(card))
+    .catch(() => {
+      if (error.name === 'DocumentNotFoundError') {
         res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
-        res.status(200).send(card);
+        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE })
       }
-    })
-    .catch(() => res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE }));
+  });
 };
