@@ -1,21 +1,28 @@
 const User = require('../models/user');
 
+const ERROR_WRONG_REQUEST_CODE = 500;
+const ERROR_WRONG_PARAMETERS_CODE = 400;
+const ERROR_WRONG_DATA_CODE = 404;
+const ERROR_WRONG_REQUEST_MESSAGE = 'Не удается обработать запрос.';
+const ERROR_WRONG_PARAMETERS_MESSAGE = 'Педаны некорректные данные при создании карточки.';
+const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
+
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(500).send({ message: 'Не удается обработать запрос' }));
+    .catch(() => res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE }));
 };
 
 module.exports.getUser = (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user === null) {
-        res.status(404).send({ message: `Пользователь по указанному ${req.params.id} не найден.` });
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
         res.send({ data: user });
       }
     })
-    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при получении пользователя.' }));
+    .catch(() => res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE }));
 };
 
 module.exports.createUser = (req, res) => {
@@ -24,9 +31,9 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.status(201).send({ data: user }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
+        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
       } else {
-        res.status(500).send({ message: 'Не удается обработать запрос' });
+        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
       }
     });
 };
@@ -38,16 +45,16 @@ module.exports.patchUsersMe = (req, res) => {
   User.findByIdAndUpdate(id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (user === null) {
-        res.status(404).send({ message: `Пользователь по указанному ${req.params.id} не найден.` });
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
         res.send({ name, about });
       }
     })
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
+        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
       } else {
-        res.status(500).send({ message: 'Не удается обработать запрос' });
+        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
       }
     });
 };
@@ -58,16 +65,17 @@ module.exports.patchUsersMeAvatar = (req, res) => {
   User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (user === null) {
-        res.status(404).send({ message: `Пользователь по указанному ${req.params.id} не найден.` });
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
         res.send({ avatar });
       }
     })
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
+        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
       } else {
-        res.status(500).send({ message: 'Не удается обработать запрос' });
+        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+
       }
     });
 };

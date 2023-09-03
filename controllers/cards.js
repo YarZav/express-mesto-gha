@@ -1,10 +1,17 @@
 const Card = require('../models/card');
 
+const ERROR_WRONG_REQUEST_CODE = 500;
+const ERROR_WRONG_PARAMETERS_CODE = 400;
+const ERROR_WRONG_DATA_CODE = 404;
+const ERROR_WRONG_REQUEST_MESSAGE = 'Не удается обработать запрос.';
+const ERROR_WRONG_PARAMETERS_MESSAGE = 'Педаны некорректные данные при создании карточки.';
+const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
+
 module.exports.getCards = (req, res) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(500).send({ message: 'Не удается обработать запрос' }));
+    .catch(() => res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE }));
 };
 
 module.exports.createCard = (req, res) => {
@@ -14,9 +21,9 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.status(201).send({ data: card }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
+        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
       } else {
-        res.status(500).send({ message: 'Не удается обработать запрос' });
+        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
       }
     });
 };
@@ -25,12 +32,12 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
     .then((card) => {
       if (card === null) {
-        res.status(404).send({ message: `Карточка с указанным ${req.params.id} не найдена.` });
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
         res.send({ data: card });
       }
     })
-    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при лайке карточки.' }));
+    .catch(() => res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE }));
 };
 
 module.exports.putCardLike = (req, res) => {
@@ -38,12 +45,12 @@ module.exports.putCardLike = (req, res) => {
   Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: owner } }, { new: true })
     .then((card) => {
       if (card === null) {
-        res.status(404).send({ message: `Карточка с указанным ${req.params.id} не найдена.` });
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE })
       } else {
         res.status(201).send(card);
       }
     })
-    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при лайке карточки.' }));
+    .catch(() => res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE }));
 };
 
 module.exports.deleteCardLike = (req, res) => {
@@ -51,10 +58,10 @@ module.exports.deleteCardLike = (req, res) => {
   Card.findByIdAndUpdate(req.params.id, { $pull: { likes: owner } }, { new: true })
     .then((card) => {
       if (card === null) {
-        res.status(404).send({ message: `Карточка с указанным ${req.params.id} не найдена.` });
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
         res.status(200).send(card);
       }
     })
-    .catch(() => res.status(400).send({ message: 'Переданы некорректные данные при лайке карточки.' }));
+    .catch(() => res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE }));
 };
