@@ -35,7 +35,7 @@ module.exports.patchUsersMe = (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   const id = req.user._id;
   const { name, about } = req.body;
-  User.findByIdAndUpdate(id, { name, about }, { runValidators: true })
+  User.findByIdAndUpdate(id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (user === null) {
         res.status(404).send({ message: `Пользователь по указанному ${req.params.id} не найден.` });
@@ -56,7 +56,7 @@ module.exports.patchUsersMeAvatar = (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   const id = req.user._id;
   const { avatar } = req.body;
-  User.findByIdAndUpdate(id, { avatar }, { runValidators: true })
+  User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (user === null) {
         res.status(404).send({ message: `Пользователь по указанному ${req.params.id} не найден.` });
