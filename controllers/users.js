@@ -3,7 +3,7 @@ const User = require('../models/user');
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(500).send());
+    .catch(() => res.status(500).send({ message: 'Не удается обработать запрос' }));
 };
 
 module.exports.getUser = (req, res) => {
@@ -21,12 +21,12 @@ module.exports.getUser = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(201).send({ data: user }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       } else {
-        res.status(500).send();
+        res.status(500).send({ message: 'Не удается обработать запрос' });
       }
     });
 };
@@ -47,7 +47,7 @@ module.exports.patchUsersMe = (req, res) => {
       if (error.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
       } else {
-        res.status(500).send();
+        res.status(500).send({ message: 'Не удается обработать запрос' });
       }
     });
 };
@@ -68,7 +68,7 @@ module.exports.patchUsersMeAvatar = (req, res) => {
       if (error.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
       } else {
-        res.status(500).send();
+        res.status(500).send({ message: 'Не удается обработать запрос' });
       }
     });
 };

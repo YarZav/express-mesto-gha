@@ -4,7 +4,7 @@ module.exports.getCards = (req, res) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(500).send());
+    .catch(() => res.status(500).send({ message: 'Не удается обработать запрос' }));
 };
 
 module.exports.createCard = (req, res) => {
@@ -12,12 +12,12 @@ module.exports.createCard = (req, res) => {
   const owner = req.user._id;
   const { name, link } = req.body;
   Card.create({ name, link, owner })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.status(201).send({ data: card }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
       } else {
-        res.status(500).send();
+        res.status(500).send({ message: 'Не удается обработать запрос' });
       }
     });
 };
