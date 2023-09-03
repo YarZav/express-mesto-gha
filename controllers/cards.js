@@ -32,7 +32,7 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
     .orFail()
     .then((card) => res.send({ data: card }))
-    .catch(() => {
+    .catch((error) => {
       if (error.name === 'DocumentNotFoundError') {
         res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
