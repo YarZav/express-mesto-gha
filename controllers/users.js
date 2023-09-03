@@ -32,7 +32,7 @@ module.exports.createUser = (req, res) => {
 };
 
 module.exports.patchUsersMe = (req, res) => {
-  // eslint-disable-next-line no-underscore-dangle
+  // eslint-disable-next-line
   const id = req.user._id;
   const { name, about } = req.body;
   User.findByIdAndUpdate(id, { name, about }, { new: true, runValidators: true })
@@ -53,7 +53,6 @@ module.exports.patchUsersMe = (req, res) => {
 };
 
 module.exports.patchUsersMeAvatar = (req, res) => {
-  // eslint-disable-next-line no-underscore-dangle
   const id = req.user._id;
   const { avatar } = req.body;
   User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })

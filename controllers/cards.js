@@ -8,7 +8,6 @@ module.exports.getCards = (req, res) => {
 };
 
 module.exports.createCard = (req, res) => {
-  // eslint-disable-next-line no-underscore-dangle
   const owner = req.user._id;
   const { name, link } = req.body;
   Card.create({ name, link, owner })
@@ -35,7 +34,6 @@ module.exports.deleteCard = (req, res) => {
 };
 
 module.exports.putCardLike = (req, res) => {
-  // eslint-disable-next-line no-underscore-dangle
   const owner = req.user._id;
   Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: owner } }, { new: true })
     .then((card) => {
@@ -49,7 +47,6 @@ module.exports.putCardLike = (req, res) => {
 };
 
 module.exports.deleteCardLike = (req, res) => {
-  // eslint-disable-next-line no-underscore-dangle
   const owner = req.user._id;
   Card.findByIdAndUpdate(req.params.id, { $pull: { likes: owner } }, { new: true })
     .then((card) => {
