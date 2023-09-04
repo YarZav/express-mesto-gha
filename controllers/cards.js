@@ -38,7 +38,7 @@ module.exports.deleteCard = (req, res) => {
     .orFail()
     .then((card) => res.send({ data: card }))
     .catch((error) => {
-      if (error.name === 'DocumentNotFoundError') {
+      if (error.name === 'CastError') {
         res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
@@ -52,7 +52,7 @@ module.exports.putCardLike = (req, res) => {
     .orFail()
     .then((card) => res.status(SUCCESS_CREATED_CODE).send(card))
     .catch((error) => {
-      if (error.name === 'DocumentNotFoundError') {
+      if (error.name === 'CastError') {
         res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
@@ -66,7 +66,7 @@ module.exports.deleteCardLike = (req, res) => {
     .orFail()
     .then((card) => res.status(SUCCESS_UPDATED_CODE).send(card))
     .catch((error) => {
-      if (error.name === 'DocumentNotFoundError') {
+      if (error.name === 'CastError') {
         res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
