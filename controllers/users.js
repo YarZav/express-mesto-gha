@@ -1,11 +1,13 @@
 const User = require('../models/user');
 
-const ERROR_WRONG_REQUEST_CODE = 500;
+const SUCCESS_CREATED_CODE = 201;
 const ERROR_WRONG_PARAMETERS_CODE = 400;
 const ERROR_WRONG_DATA_CODE = 404;
-const ERROR_WRONG_REQUEST_MESSAGE = 'Не удается обработать запрос.';
+const ERROR_WRONG_REQUEST_CODE = 500;
+
 const ERROR_WRONG_PARAMETERS_MESSAGE = 'Педаны некорректные данные.';
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
+const ERROR_WRONG_REQUEST_MESSAGE = 'Не удается обработать запрос.';
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -29,7 +31,7 @@ module.exports.getUser = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.status(201).send({ data: user }))
+    .then((user) => res.status(SUCCESS_CREATED_CODE).send({ data: user }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
