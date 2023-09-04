@@ -53,9 +53,9 @@ module.exports.putCardLike = (req, res) => {
     .then((card) => res.status(SUCCESS_CREATED_CODE).send(card))
     .catch((error) => {
       if (error.name === 'CastError') {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
-      } else {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+      } else {
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       }
     });
 };
@@ -67,9 +67,9 @@ module.exports.deleteCardLike = (req, res) => {
     .then((card) => res.status(SUCCESS_UPDATED_CODE).send(card))
     .catch((error) => {
       if (error.name === 'CastError') {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
-      } else {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+      } else {
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       }
     });
 };
