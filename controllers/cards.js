@@ -6,7 +6,7 @@ const ERROR_WRONG_PARAMETERS_CODE = 400;
 const ERROR_WRONG_DATA_CODE = 404;
 const ERROR_WRONG_REQUEST_CODE = 500;
 
-const ERROR_WRONG_PARAMETERS_MESSAGE = 'Педаны некорректные данные при создании карточки.';
+const ERROR_WRONG_PARAMETERS_MESSAGE = 'Педаны некорректные данные.';
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
 const ERROR_WRONG_REQUEST_MESSAGE = 'Не удается обработать запрос.';
 
@@ -39,9 +39,9 @@ module.exports.deleteCard = (req, res) => {
     .then((card) => res.send({ data: card }))
     .catch((error) => {
       if (error.name === 'CastError') {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
-      } else {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+      } else {
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       }
     });
 };
@@ -66,10 +66,13 @@ module.exports.deleteCardLike = (req, res) => {
     .orFail()
     .then((card) => res.status(SUCCESS_UPDATED_CODE).send(card))
     .catch((error) => {
+      console.log(error.name);
       if (error.name === 'CastError') {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
-      } else {
+        console.log('CastError');
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+      } else {
+        console.log('Other');
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       }
     });
 };
