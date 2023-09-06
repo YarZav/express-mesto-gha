@@ -7,7 +7,7 @@ const ERROR_WRONG_REQUEST_CODE = 500;
 
 const ERROR_WRONG_PARAMETERS_MESSAGE = 'Педаны некорректные данные.';
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
-const ERROR_WRONG_REQUEST_MESSAGE = 'Не удается обработать запрос.';
+const ERROR_WRONG_REQUEST_MESSAGE = 'Ошибка сервера.';
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -24,8 +24,10 @@ module.exports.getUser = (req, res) => {
     .catch((error) => {
       if (error.name === 'CastError') {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
-      } else {
+      } else if (error.name === 'DocumentNotFoundError') {
         res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
+      } else {
+        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
       }
     });
 };

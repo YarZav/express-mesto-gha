@@ -6,7 +6,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "author": "",
+  "author": "Iaroslav",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^8.48.0",
