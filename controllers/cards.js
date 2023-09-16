@@ -3,11 +3,13 @@ const Card = require('../models/card');
 const SUCCESS_UPDATED_CODE = 200;
 const SUCCESS_CREATED_CODE = 201;
 const ERROR_WRONG_PARAMETERS_CODE = 400;
+const ERROR_OWNER_CODE = 403;
 const ERROR_WRONG_DATA_CODE = 404;
 const ERROR_WRONG_REQUEST_CODE = 500;
 
 const ERROR_WRONG_PARAMETERS_MESSAGE = 'Переданы некорректные данные.';
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
+const ERROR_OWNER_MESSAGE = 'Данные чужого пользователя';
 const ERROR_WRONG_REQUEST_MESSAGE = 'Ошибка сервера.';
 
 module.exports.getCards = (req, res) => {
@@ -36,10 +38,16 @@ module.exports.createCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
     .orFail()
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (card.owner._id === req.user._id) {
+        res.status(ERROR_OWNER_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+      } else {
+        res.send({ data: card });
+      }
+    })
     .catch((error) => {
       if (error.name === 'CastError') {
-        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_OWNER_MESSAGE });
       } else if (error.name === 'DocumentNotFoundError') {
         res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
       } else {
