@@ -49,8 +49,7 @@ module.exports.deleteCard = (req, res) => {
 };
 
 module.exports.putCardLike = (req, res) => {
-  const owner = req.user._id;
-  Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: owner } }, { new: true })
+  Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: req.user._id } }, { new: true })
     .orFail()
     .then((card) => res.status(SUCCESS_CREATED_CODE).send(card))
     .catch((error) => {
@@ -65,8 +64,7 @@ module.exports.putCardLike = (req, res) => {
 };
 
 module.exports.deleteCardLike = (req, res) => {
-  const owner = req.user._id;
-  Card.findByIdAndUpdate(req.params.id, { $pull: { likes: owner } }, { new: true })
+  Card.findByIdAndUpdate(req.params.id, { $pull: { likes: req.user._id } }, { new: true })
     .orFail()
     .then((card) => res.status(SUCCESS_UPDATED_CODE).send(card))
     .catch((error) => {
