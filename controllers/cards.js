@@ -36,13 +36,13 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findById(req.params.cardId)
+  Card.findById(req.params.id)
     .orFail()
     .then((card) => {
-      if (!card.owner.equals(req.user._id)) {
-        res.status(ERROR_OWNER_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
-      } else {
+      if (card.owner._id === req.user._id) {
         card.remove().then(() => res.send({ data: card }));
+      } else {
+        res.status(ERROR_OWNER_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
       }
     })
     .catch((error) => {
