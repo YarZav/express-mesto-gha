@@ -40,9 +40,9 @@ module.exports.deleteCard = (req, res) => {
     .orFail()
     .then((card) => {
       if (card.owner._id === req.user._id) {
-        res.status(ERROR_OWNER_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
-      } else {
         res.send({ data: card });
+      } else {
+        res.status(ERROR_OWNER_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
       }
     })
     .catch((error) => {
