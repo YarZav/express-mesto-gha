@@ -77,7 +77,8 @@ module.exports.createUser = (req, res) => {
     }))
     .then((user) => res.status(SUCCESS_CREATED_CODE).send({ data: user }))
     .catch((error) => {
-      if (error.name === 'ValidationError') {
+      console.log(error.name);
+      if (error.name === 'ValidationError' || error.name === 'Error') {
         res.status(ERROR_WRONG_PARAMETERS_CODE)
           .send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
       } else {

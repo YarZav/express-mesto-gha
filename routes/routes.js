@@ -1,4 +1,5 @@
 const routes = require('express').Router();
+const { celebrate, Joi } = require('celebrate');
 const usersRouter = require('./users');
 const cardsRouter = require('./cards');
 const { login } = require('../controllers/login');
@@ -8,8 +9,22 @@ const auth = require('../middlewares/auth');
 const ERROR_WRONG_DATA_CODE = 404;
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
 
+const regEx = /(https?:\/\/)(w{3}\.)?([a-zA-Z0-9-]{0,63}\.)([a-zA-Z]{2,4})(\/[\w\-._~:/?#[\]@!$&'()*+,;=]#?)?/;
+
 routes.post('/signin', login);
-routes.post('/signup', createUser);
+routes.post(
+  '/signup',
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
+      avatar: Joi.string().pattern(regEx),
+      email: Joi.string().required().email(),
+      password: Joi.string().required(),
+    }),
+  }),
+  createUser,
+);
 
 routes.use('/users', auth, usersRouter);
 routes.use('/cards', auth, cardsRouter);
