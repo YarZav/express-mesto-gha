@@ -70,7 +70,6 @@ module.exports.deleteCardLike = (req, res) => {
     .orFail()
     .then((card) => res.status(SUCCESS_UPDATED_CODE).send(card))
     .catch((error) => {
-      console.log(error.name);
       if (error.name === 'CastError') {
         res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
       } else if (error.name === 'DocumentNotFoundError') {

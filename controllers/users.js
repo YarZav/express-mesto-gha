@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const User = require('../models/user');
+const User = require('../models/user').default;
 
 const SUCCESS_CREATED_CODE = 201;
 const ERROR_WRONG_PARAMETERS_CODE = 400;
