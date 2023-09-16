@@ -1,5 +1,5 @@
 const routes = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, errors, Joi } = require('celebrate');
 const usersRouter = require('./users');
 const cardsRouter = require('./cards');
 const { login } = require('../controllers/login');
@@ -28,6 +28,8 @@ routes.post(
 
 routes.use('/users', auth, usersRouter);
 routes.use('/cards', auth, cardsRouter);
+
+routes.use(errors());
 
 routes.use('*', (req, res) => {
   res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
