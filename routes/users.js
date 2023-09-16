@@ -19,7 +19,16 @@ usersRouter.get(
   }),
   getUser,
 );
-usersRouter.patch('/me', patchUsersMe);
+usersRouter.patch(
+  '/me',
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
+    }),
+  }),
+  patchUsersMe,
+);
 usersRouter.patch('/me/avatar', patchUsersMeAvatar);
 
 module.exports = usersRouter;
