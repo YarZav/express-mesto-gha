@@ -1,10 +1,8 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const SUCCESS_CREATED_CODE = 201;
 const ERROR_WRONG_PARAMETERS_CODE = 400;
-const ERROR_AUTH_CODE = 401;
 const ERROR_WRONG_DATA_CODE = 404;
 const ERROR_DATABASE_CODE = 409;
 const ERROR_WRONG_REQUEST_CODE = 500;
@@ -89,9 +87,8 @@ module.exports.createUser = (req, res) => {
 };
 
 module.exports.patchUsersMe = (req, res) => {
-  const id = req.user._id;
   const { name, about } = req.body;
-  User.findByIdAndUpdate(id, { name, about }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail()
     .then(() => res.send({ name, about }))
     .catch((error) => {
