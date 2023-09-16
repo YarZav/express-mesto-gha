@@ -6,10 +6,12 @@ const SUCCESS_CREATED_CODE = 201;
 const ERROR_WRONG_PARAMETERS_CODE = 400;
 const ERROR_AUTH_CODE = 401;
 const ERROR_WRONG_DATA_CODE = 404;
+const ERROR_DATABASE_CODE = 409;
 const ERROR_WRONG_REQUEST_CODE = 500;
 
 const ERROR_WRONG_PARAMETERS_MESSAGE = 'Переданы некорректные данные.';
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
+const ERROR_DATABASE_MESSAGE = 'Ошибка базы данных';
 const ERROR_WRONG_REQUEST_MESSAGE = 'Ошибка сервера.';
 
 module.exports.getUsers = (req, res) => {
@@ -82,9 +84,13 @@ module.exports.createUser = (req, res) => {
       email: user.email,
     }))
     .catch((error) => {
+      console.log(error.name);
       if (error.name === 'ValidationError' || error.name === 'Error') {
         res.status(ERROR_WRONG_PARAMETERS_CODE)
           .send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+      } else if (error.name === 'MongoServerError') {
+        res.status(ERROR_DATABASE_CODE)
+          .send({ message: ERROR_DATABASE_MESSAGE });
       } else {
         res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
       }
