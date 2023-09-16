@@ -38,26 +38,18 @@ module.exports.getUser = (req, res) => {
 };
 
 module.exports.getUsersMe = (req, res) => {
-  jwt.verify(req.cookies.token, 'some-secret-key', (err, decodedToken) => {
-    if (err) {
-      res.status(ERROR_AUTH_CODE).send({ message: err.message });
-    } else {
-      req.userId = decodedToken._id;
-      User.findById(decodedToken._id)
-        .orFail()
-        .then((user) => res.send({ data: user }))
-        .catch((error) => {
-          if (error.name === 'CastError') {
-            res.status(ERROR_WRONG_PARAMETERS_CODE)
-              .send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
-          } else if (error.name === 'DocumentNotFoundError') {
-            res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
-          } else {
-            res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
-          }
-        });
-    }
-  });
+  User.findById(req.user._id)
+    .orFail()
+    .then((user) => res.send({ data: user }))
+    .catch((error) => {
+      if (error.name === 'CastError') {
+        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+      } else if (error.name === 'DocumentNotFoundError') {
+        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
+      } else {
+        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+      }
+    });
 };
 
 module.exports.createUser = (req, res) => {
