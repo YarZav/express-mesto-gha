@@ -8,6 +8,8 @@ const {
   patchUsersMeAvatar,
 } = require('../controllers/users');
 
+const regEx = /(https?:\/\/)(w{3}\.)?([a-zA-Z0-9-]{0,63}\.)([a-zA-Z]{2,4})(\/[\w\-._~:/?#[\]@!$&'()*+,;=]#?)?/;
+
 usersRouter.get('', getUsers);
 usersRouter.get('/me', getUsersMe);
 usersRouter.get(
@@ -29,6 +31,14 @@ usersRouter.patch(
   }),
   patchUsersMe,
 );
-usersRouter.patch('/me/avatar', patchUsersMeAvatar);
+usersRouter.patch(
+  '/me/avatar',
+  celebrate({
+    body: Joi.object().keys({
+      avatar: Joi.string().pattern(regEx),
+    }),
+  }),
+  patchUsersMeAvatar,
+);
 
 module.exports = usersRouter;
