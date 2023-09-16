@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 const SUCCESS_CREATED_CODE = 201;
@@ -33,8 +34,24 @@ module.exports.getUser = (req, res) => {
 };
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
+  const {
+    email,
+    password,
+    name,
+    about,
+    avatar,
+  } = req.body;
+
+  bcrypt.hash(password, 10)
+    .then((passwordHash) => {
+      User.create({
+        email,
+        passwordHash,
+        name,
+        about,
+        avatar,
+      });
+    })
     .then((user) => res.status(SUCCESS_CREATED_CODE).send({ data: user }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
@@ -46,7 +63,6 @@ module.exports.createUser = (req, res) => {
 };
 
 module.exports.patchUsersMe = (req, res) => {
-  // eslint-disable-next-line
   const id = req.user._id;
   const { name, about } = req.body;
   User.findByIdAndUpdate(id, { name, about }, { new: true, runValidators: true })
