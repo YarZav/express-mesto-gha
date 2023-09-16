@@ -11,7 +11,16 @@ const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
 
 const regEx = /(https?:\/\/)(w{3}\.)?([a-zA-Z0-9-]{0,63}\.)([a-zA-Z]{2,4})(\/[\w\-._~:/?#[\]@!$&'()*+,;=]#?)?/;
 
-routes.post('/signin', login);
+routes.post(
+  '/signin',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required().email(),
+      password: Joi.string().required(),
+    }),
+  }),
+  login,
+);
 routes.post(
   '/signup',
   celebrate({
