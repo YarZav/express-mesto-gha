@@ -6,7 +6,7 @@ const ERROR_WRONG_PARAMETERS_CODE = 400;
 const ERROR_WRONG_DATA_CODE = 404;
 const ERROR_WRONG_REQUEST_CODE = 500;
 
-const ERROR_WRONG_PARAMETERS_MESSAGE = 'Педаны некорректные данные.';
+const ERROR_WRONG_PARAMETERS_MESSAGE = 'Переданы некорректные данные.';
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
 const ERROR_WRONG_REQUEST_MESSAGE = 'Ошибка сервера.';
 

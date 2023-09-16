@@ -8,7 +8,7 @@ const ERROR_AUTH_CODE = 401;
 const ERROR_WRONG_DATA_CODE = 404;
 const ERROR_WRONG_REQUEST_CODE = 500;
 
-const ERROR_WRONG_PARAMETERS_MESSAGE = 'Педаны некорректные данные.';
+const ERROR_WRONG_PARAMETERS_MESSAGE = 'Переданы некорректные данные.';
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
 const ERROR_WRONG_REQUEST_MESSAGE = 'Ошибка сервера.';
 
@@ -75,15 +75,19 @@ module.exports.createUser = (req, res) => {
         name,
         about,
         avatar,
-      });
+      })
+        .then((user) => res.status(SUCCESS_CREATED_CODE).send({ data: user }))
+        .catch((error) => {
+          if (error.name === 'ValidationError') {
+            res.status(ERROR_WRONG_PARAMETERS_CODE)
+              .send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+          } else {
+            res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+          }
+        });
     })
-    .then((user) => res.status(SUCCESS_CREATED_CODE).send({ data: user }))
-    .catch((error) => {
-      if (error.name === 'ValidationError') {
-        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
-      } else {
-        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
-      }
+    .catch(() => {
+      res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
     });
 };
 
