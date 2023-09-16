@@ -68,25 +68,21 @@ module.exports.createUser = (req, res) => {
   } = req.body;
 
   bcrypt.hash(password, 10)
-    .then((passwordHash) => {
-      User.create({
-        email,
-        passwordHash,
-        name,
-        about,
-        avatar,
-      })
-        .then((user) => res.status(SUCCESS_CREATED_CODE).send({ data: user }))
-        .catch((error) => {
-          if (error.name === 'ValidationError') {
-            res.status(ERROR_WRONG_PARAMETERS_CODE).send();
-          } else {
-            res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
-          }
-        });
-    })
-    .catch(() => {
-      res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+    .then((passwordHash) => User.create({
+      email,
+      passwordHash,
+      name,
+      about,
+      avatar,
+    }))
+    .then((user) => res.status(SUCCESS_CREATED_CODE).send({ data: user }))
+    .catch((error) => {
+      if (error.name === 'ValidationError') {
+        res.status(ERROR_WRONG_PARAMETERS_CODE)
+          .send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+      } else {
+        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+      }
     });
 };
 
