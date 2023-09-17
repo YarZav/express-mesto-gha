@@ -5,7 +5,7 @@ const cardsRouter = require('./cards');
 const { login } = require('../controllers/login');
 const { createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
-const { signinRouteValidation, signupRouteValidation } = require('../validator/users/users');
+const { signinRouteValidation, signupRouteValidation } = require('../validator/sign/sign');
 
 const ERROR_WRONG_DATA_CODE = 404;
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
