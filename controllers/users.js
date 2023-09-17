@@ -12,12 +12,10 @@ const {
   ERROR_SERVER_MESSAGE,
 } = require('../constants/constants');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => {
-      res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
-    });
+    .catch(next);
 };
 
 module.exports.getUser = (req, res) => {

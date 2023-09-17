@@ -11,8 +11,6 @@ module.exports.login = (req, res) => {
       res.send({ token });
     })
     .catch((error) => {
-      res
-        .status(ERROR_AUTH_CODE)
-        .send({ message: error.message });
+      res.status(ERROR_AUTH_CODE).send({ message: error.message });
     });
 };
