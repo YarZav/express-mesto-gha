@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-
-const ERROR_AUTH_CODE = 401;
+const { ERROR_AUTH_CODE } = require('../constants/constants');
 
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
