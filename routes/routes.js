@@ -1,38 +1,17 @@
 const routes = require('express').Router();
-const { celebrate, errors, Joi } = require('celebrate');
+const { errors } = require('celebrate');
 const usersRouter = require('./users');
 const cardsRouter = require('./cards');
 const { login } = require('../controllers/login');
 const { createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
-const urlRegExp = require('../constants/constants');
+const { signinRouteValidation, signupRouteValidation } = require('../validator/users/users');
 
 const ERROR_WRONG_DATA_CODE = 404;
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
 
-routes.post(
-  '/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().required().email(),
-      password: Joi.string().required(),
-    }),
-  }),
-  login,
-);
-routes.post(
-  '/signup',
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().min(2).max(30),
-      about: Joi.string().min(2).max(30),
-      avatar: Joi.string().pattern(urlRegExp),
-      email: Joi.string().required().email(),
-      password: Joi.string().required(),
-    }),
-  }),
-  createUser,
-);
+routes.post('/signin', signinRouteValidation, login);
+routes.post('/signup', signupRouteValidation, createUser);
 
 routes.use('/users', auth, usersRouter);
 routes.use('/cards', auth, cardsRouter);
