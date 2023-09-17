@@ -1,13 +1,7 @@
 const Card = require('../models/card');
 const {
-  ERROR_PARAMETERS_CODE,
   ERROR_USER_CODE,
-  ERROR_DATA_CODE,
-  ERROR_SERVER_CODE,
   ERROR_PARAMETERS_MESSAGE,
-  ERROR_DATA_MESSAGE,
-  ERROR_USER_MESSAGE,
-  ERROR_SERVER_MESSAGE,
 } = require('../constants/constants');
 
 module.exports.getCards = (req, res, next) => {
@@ -25,7 +19,7 @@ module.exports.createCard = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.id)
     .orFail()
     .then((card) => {
@@ -37,15 +31,7 @@ module.exports.deleteCard = (req, res) => {
         res.status(ERROR_USER_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
       }
     })
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_USER_MESSAGE });
-      } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
-      } else {
-        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
-      }
-    });
+    .catch(next);
 };
 
 module.exports.putCardLike = (req, res, next) => {
