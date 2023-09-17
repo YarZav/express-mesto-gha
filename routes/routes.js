@@ -5,7 +5,7 @@ const cardsRouter = require('./cards');
 const { login } = require('../controllers/login');
 const { createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
-const urlRegex = require('../constants/constants');
+const urlRegExp = require('../constants/constants');
 
 const ERROR_WRONG_DATA_CODE = 404;
 const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
@@ -26,7 +26,7 @@ routes.post(
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
-      avatar: Joi.string().pattern(urlRegex),
+      avatar: Joi.string().pattern(urlRegExp),
       email: Joi.string().required().email(),
       password: Joi.string().required(),
     }),
