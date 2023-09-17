@@ -1,23 +1,23 @@
 const Card = require('../models/card');
-
-const SUCCESS_UPDATED_CODE = 200;
-const SUCCESS_CREATED_CODE = 201;
-const ERROR_WRONG_PARAMETERS_CODE = 400;
-const ERROR_OWNER_CODE = 403;
-const ERROR_WRONG_DATA_CODE = 404;
-const ERROR_WRONG_REQUEST_CODE = 500;
-
-const ERROR_WRONG_PARAMETERS_MESSAGE = 'Переданы некорректные данные.';
-const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
-const ERROR_OWNER_MESSAGE = 'Данные чужого пользователя';
-const ERROR_WRONG_REQUEST_MESSAGE = 'Ошибка сервера.';
+const {
+  SUCCESS_FETCH_CODE,
+  SUCCESS_CREATED_CODE,
+  ERROR_PARAMETERS_CODE,
+  ERROR_USER_CODE,
+  ERROR_DATA_CODE,
+  ERROR_SERVER_CODE,
+  ERROR_PARAMETERS_MESSAGE,
+  ERROR_DATA_MESSAGE,
+  ERROR_USER_MESSAGE,
+  ERROR_SERVER_MESSAGE,
+} = require('../constants/constants');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send({ data: cards }))
     .catch(() => {
-      res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+      res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
     });
 };
 
@@ -28,9 +28,9 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.status(SUCCESS_CREATED_CODE).send({ data: card }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
       } else {
-        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
       }
     });
 };
@@ -44,16 +44,16 @@ module.exports.deleteCard = (req, res) => {
           .orFail()
           .then((deletedCard) => res.send({ data: deletedCard }));
       } else {
-        res.status(ERROR_OWNER_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+        res.status(ERROR_USER_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
       }
     })
     .catch((error) => {
       if (error.name === 'CastError') {
-        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_OWNER_MESSAGE });
+        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_USER_MESSAGE });
       } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
+        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
       } else {
-        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
       }
     });
 };
@@ -64,11 +64,11 @@ module.exports.putCardLike = (req, res) => {
     .then((card) => res.status(SUCCESS_CREATED_CODE).send(card))
     .catch((error) => {
       if (error.name === 'CastError') {
-        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
       } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
+        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
       } else {
-        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
       }
     });
 };
@@ -76,14 +76,14 @@ module.exports.putCardLike = (req, res) => {
 module.exports.deleteCardLike = (req, res) => {
   Card.findByIdAndUpdate(req.params.id, { $pull: { likes: req.user._id } }, { new: true })
     .orFail()
-    .then((card) => res.status(SUCCESS_UPDATED_CODE).send(card))
+    .then((card) => res.status(SUCCESS_FETCH_CODE).send(card))
     .catch((error) => {
       if (error.name === 'CastError') {
-        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
       } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
+        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
       } else {
-        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
       }
     });
 };
