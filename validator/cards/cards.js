@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-const urlRegExp = require('../../constants/constants');
+const { urlRegExp } = require('../../constants/constants');
 
 const cardsRouteValidation = celebrate({
   body: Joi.object().keys({

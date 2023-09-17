@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-const urlRegExp = require('../../constants/constants');
+const { urlRegExp } = require('../../constants/constants');
 
 const usersIdRouteValidation = celebrate({
   params: Joi.object().keys({
