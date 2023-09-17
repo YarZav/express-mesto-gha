@@ -84,19 +84,11 @@ module.exports.patchUsersMe = (req, res) => {
     });
 };
 
-module.exports.patchUsersMeAvatar = (req, res) => {
+module.exports.patchUsersMeAvatar = (req, res, next) => {
   const id = req.user._id;
   const { avatar } = req.body;
   User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
     .orFail()
     .then(() => res.send({ avatar }))
-    .catch((error) => {
-      if (error.name === 'ValidationError') {
-        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
-      } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
-      } else {
-        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
-      }
-    });
+    .catch(next);
 };
