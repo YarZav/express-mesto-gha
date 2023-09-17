@@ -6,9 +6,7 @@ const { login } = require('../controllers/login');
 const { createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 const { signinRouteValidation, signupRouteValidation } = require('../validator/sign/sign');
-
-const ERROR_WRONG_DATA_CODE = 404;
-const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
+const { ERROR_DATA_CODE, ERROR_DATA_MESSAGE } = require('../constants/constants');
 
 routes.post('/signin', signinRouteValidation, login);
 routes.post('/signup', signupRouteValidation, createUser);
@@ -19,7 +17,7 @@ routes.use('/cards', auth, cardsRouter);
 routes.use(errors());
 
 routes.use('*', (req, res) => {
-  res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
+  res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
 });
 
 module.exports = routes;
