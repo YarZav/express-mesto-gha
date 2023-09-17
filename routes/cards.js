@@ -11,7 +11,7 @@ const {
   cardsDeleteRouteValidation,
   cardsIdLikeRouteValidation,
   cardsIdDislikeRouteValidation,
-} = require('../validator/cards/cards');
+} = require('../validators/cards/cards');
 
 cardsRouter.get('', getCards);
 cardsRouter.post('', cardsRouteValidation, createCard);

@@ -5,7 +5,7 @@ const cardsRouter = require('./cards');
 const { login } = require('../controllers/login');
 const { createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
-const { signinRouteValidation, signupRouteValidation } = require('../validator/sign/sign');
+const { signinRouteValidation, signupRouteValidation } = require('../validators/sign/sign');
 const { ERROR_DATA_CODE, ERROR_DATA_MESSAGE } = require('../constants/constants');
 const errorHandler = require('../errors/errorHandler');
 
