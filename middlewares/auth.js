@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/UnauthorizedError');
+const { secret } = require('../constants/constants');
 
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
@@ -13,7 +14,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'some-secret-key');
+    payload = jwt.verify(token, secret);
   } catch (err) {
     next(new UnauthorizedError('Неправильный логин или пароль'));
   }
