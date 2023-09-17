@@ -12,27 +12,19 @@ const {
   ERROR_SERVER_MESSAGE,
 } = require('../constants/constants');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send({ data: cards }))
-    .catch(() => {
-      res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
-    });
+    .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const owner = req.user._id;
   const { name, link } = req.body;
   Card.create({ name, link, owner })
     .then((card) => res.status(SUCCESS_CREATED_CODE).send({ data: card }))
-    .catch((error) => {
-      if (error.name === 'ValidationError') {
-        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
-      } else {
-        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
-      }
-    });
+    .catch(next);
 };
 
 module.exports.deleteCard = (req, res) => {
