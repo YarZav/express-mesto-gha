@@ -63,17 +63,9 @@ module.exports.putCardLike = (req, res) => {
     });
 };
 
-module.exports.deleteCardLike = (req, res) => {
+module.exports.deleteCardLike = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.id, { $pull: { likes: req.user._id } }, { new: true })
     .orFail()
-    .then((card) => res.send(card))
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
-      } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
-      } else {
-        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
-      }
-    });
+    .then((card) => res.status(200).send(card))
+    .catch(next);
 };
