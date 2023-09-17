@@ -6,11 +6,7 @@ const {
   patchUsersMe,
   patchUsersMeAvatar,
 } = require('../controllers/users');
-const {
-  usersIdRouteValidation,
-  usersMeRouteValidation,
-  usersMeAvatarRoutevalidation,
-} = require('../validator/users/users');
+const { usersIdRouteValidation, usersMeRouteValidation, usersMeAvatarRoutevalidation } = require('../validator/users/users');
 
 usersRouter.get('', getUsers);
 usersRouter.get('/me', getUsersMe);
