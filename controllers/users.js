@@ -1,22 +1,22 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
-
-const SUCCESS_CREATED_CODE = 201;
-const ERROR_WRONG_PARAMETERS_CODE = 400;
-const ERROR_WRONG_DATA_CODE = 404;
-const ERROR_DATABASE_CODE = 409;
-const ERROR_WRONG_REQUEST_CODE = 500;
-
-const ERROR_WRONG_PARAMETERS_MESSAGE = 'Переданы некорректные данные.';
-const ERROR_WRONG_DATA_MESSAGE = 'Данные не найдены.';
-const ERROR_DATABASE_MESSAGE = 'Ошибка базы данных';
-const ERROR_WRONG_REQUEST_MESSAGE = 'Ошибка сервера.';
+const {
+  SUCCESS_CREATED_CODE,
+  ERROR_PARAMETERS_CODE,
+  ERROR_DATA_CODE,
+  ERROR_DATABASE_CODE,
+  ERROR_SERVER_CODE,
+  ERROR_PARAMETERS_MESSAGE,
+  ERROR_DATA_MESSAGE,
+  ERROR_DATABASE_MESSAGE,
+  ERROR_SERVER_MESSAGE,
+} = require('../constants/constants');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
     .catch(() => {
-      res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+      res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
     });
 };
 
@@ -26,11 +26,11 @@ module.exports.getUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((error) => {
       if (error.name === 'CastError') {
-        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
       } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
+        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
       } else {
-        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
       }
     });
 };
@@ -41,11 +41,11 @@ module.exports.getUsersMe = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((error) => {
       if (error.name === 'CastError') {
-        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
       } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
+        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
       } else {
-        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
       }
     });
 };
@@ -75,13 +75,13 @@ module.exports.createUser = (req, res) => {
     }))
     .catch((error) => {
       if (error.name === 'ValidationError' || error.name === 'Error') {
-        res.status(ERROR_WRONG_PARAMETERS_CODE)
-          .send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+        res.status(ERROR_PARAMETERS_CODE)
+          .send({ message: ERROR_PARAMETERS_MESSAGE });
       } else if (error.name === 'MongoServerError') {
         res.status(ERROR_DATABASE_CODE)
           .send({ message: ERROR_DATABASE_MESSAGE });
       } else {
-        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
       }
     });
 };
@@ -93,11 +93,11 @@ module.exports.patchUsersMe = (req, res) => {
     .then(() => res.send({ name, about }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
       } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
+        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
       } else {
-        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
       }
     });
 };
@@ -110,11 +110,11 @@ module.exports.patchUsersMeAvatar = (req, res) => {
     .then(() => res.send({ avatar }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        res.status(ERROR_WRONG_PARAMETERS_CODE).send({ message: ERROR_WRONG_PARAMETERS_MESSAGE });
+        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
       } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_WRONG_DATA_CODE).send({ message: ERROR_WRONG_DATA_MESSAGE });
+        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
       } else {
-        res.status(ERROR_WRONG_REQUEST_CODE).send({ message: ERROR_WRONG_REQUEST_MESSAGE });
+        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
       }
     });
 };
