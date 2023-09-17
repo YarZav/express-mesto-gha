@@ -18,19 +18,11 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.params.id)
     .orFail()
     .then((user) => res.send({ data: user }))
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
-      } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
-      } else {
-        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
-      }
-    });
+    .catch(next);
 };
 
 module.exports.getUsersMe = (req, res) => {
