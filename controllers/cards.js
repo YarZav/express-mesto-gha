@@ -48,19 +48,11 @@ module.exports.deleteCard = (req, res) => {
     });
 };
 
-module.exports.putCardLike = (req, res) => {
+module.exports.putCardLike = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: req.user._id } }, { new: true })
     .orFail()
     .then((card) => res.status(201).send(card))
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
-      } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
-      } else {
-        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
-      }
-    });
+    .catch(next);
 };
 
 module.exports.deleteCardLike = (req, res, next) => {
