@@ -7,7 +7,7 @@ const { createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 const { signinRouteValidation, signupRouteValidation } = require('../validators/sign/sign');
 const errorHandler = require('../errors/errorHandler');
-const NotFoundError = require('../errors/NotFoundError');
+const DocumentNotFoundError = require('../errors/DocumentNotFoundError');
 
 routes.post('/signin', signinRouteValidation, login);
 routes.post('/signup', signupRouteValidation, createUser);
@@ -16,7 +16,7 @@ routes.use('/users', auth, usersRouter);
 routes.use('/cards', auth, cardsRouter);
 
 routes.use('*', (req, res, next) => {
-  next(new NotFoundError('Неправильный путь'));
+  next(new DocumentNotFoundError('Неправильный путь'));
 });
 
 routes.use(errors());
