@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
-const { SUCCESS_CREATED_CODE } = require('../constants/constants');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -39,7 +38,7 @@ module.exports.createUser = (req, res, next) => {
       about,
       avatar,
     }))
-    .then((user) => res.status(SUCCESS_CREATED_CODE).send({
+    .then((user) => res.send({
       name: user.name,
       about: user.about,
       avatar: user.avatar,
