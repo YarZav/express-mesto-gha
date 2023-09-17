@@ -3,11 +3,9 @@ const User = require('../models/user');
 const {
   SUCCESS_CREATED_CODE,
   ERROR_PARAMETERS_CODE,
-  ERROR_DATA_CODE,
   ERROR_DATABASE_CODE,
   ERROR_SERVER_CODE,
   ERROR_PARAMETERS_MESSAGE,
-  ERROR_DATA_MESSAGE,
   ERROR_DATABASE_MESSAGE,
   ERROR_SERVER_MESSAGE,
 } = require('../constants/constants');
@@ -68,20 +66,12 @@ module.exports.createUser = (req, res) => {
     });
 };
 
-module.exports.patchUsersMe = (req, res) => {
+module.exports.patchUsersMe = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail()
     .then(() => res.send({ name, about }))
-    .catch((error) => {
-      if (error.name === 'ValidationError') {
-        res.status(ERROR_PARAMETERS_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
-      } else if (error.name === 'DocumentNotFoundError') {
-        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_MESSAGE });
-      } else {
-        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
-      }
-    });
+    .catch(next);
 };
 
 module.exports.patchUsersMeAvatar = (req, res, next) => {
