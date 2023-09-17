@@ -1,8 +1,5 @@
 const Card = require('../models/card');
-const {
-  ERROR_USER_CODE,
-  ERROR_PARAMETERS_MESSAGE,
-} = require('../constants/constants');
+const ForbiddenError = require('../errors/DocumentNotFoundError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -28,7 +25,7 @@ module.exports.deleteCard = (req, res, next) => {
           .orFail()
           .then((deletedCard) => res.send({ data: deletedCard }));
       } else {
-        res.status(ERROR_USER_CODE).send({ message: ERROR_PARAMETERS_MESSAGE });
+        next(new ForbiddenError('Неправильный путь'));
       }
     })
     .catch(next);
