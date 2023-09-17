@@ -1,14 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
-const {
-  SUCCESS_CREATED_CODE,
-  ERROR_PARAMETERS_CODE,
-  ERROR_DATABASE_CODE,
-  ERROR_SERVER_CODE,
-  ERROR_PARAMETERS_MESSAGE,
-  ERROR_DATABASE_MESSAGE,
-  ERROR_SERVER_MESSAGE,
-} = require('../constants/constants');
+const { SUCCESS_CREATED_CODE } = require('../constants/constants');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -30,7 +22,7 @@ module.exports.getUsersMe = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     email,
     password,
@@ -53,17 +45,7 @@ module.exports.createUser = (req, res) => {
       avatar: user.avatar,
       email: user.email,
     }))
-    .catch((error) => {
-      if (error.name === 'ValidationError' || error.name === 'Error') {
-        res.status(ERROR_PARAMETERS_CODE)
-          .send({ message: ERROR_PARAMETERS_MESSAGE });
-      } else if (error.name === 'MongoServerError') {
-        res.status(ERROR_DATABASE_CODE)
-          .send({ message: ERROR_DATABASE_MESSAGE });
-      } else {
-        res.status(ERROR_SERVER_CODE).send({ message: ERROR_SERVER_MESSAGE });
-      }
-    });
+    .catch(next);
 };
 
 module.exports.patchUsersMe = (req, res, next) => {
