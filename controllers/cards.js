@@ -34,7 +34,7 @@ module.exports.deleteCard = (req, res, next) => {
 module.exports.putCardLike = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: req.user._id } }, { new: true })
     .orFail()
-    .then((card) => res.status(201).send(card))
+    .then((card) => res.status(200).send(card))
     .catch(next);
 };
 
