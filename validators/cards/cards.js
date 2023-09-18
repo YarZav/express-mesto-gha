@@ -8,27 +8,10 @@ const cardsRouteValidation = celebrate({
   }),
 });
 
-const cardsDeleteRouteValidation = celebrate({
+const cardsIdRouteValidation = celebrate({
   params: Joi.object().keys({
     id: Joi.string().length(24).hex().required(),
   }),
 });
 
-const cardsIdLikeRouteValidation = celebrate({
-  params: Joi.object().keys({
-    id: Joi.string().length(24).hex().required(),
-  }),
-});
-
-const cardsIdDislikeRouteValidation = celebrate({
-  params: Joi.object().keys({
-    id: Joi.string().length(24).hex().required(),
-  }),
-});
-
-module.exports = {
-  cardsRouteValidation,
-  cardsDeleteRouteValidation,
-  cardsIdLikeRouteValidation,
-  cardsIdDislikeRouteValidation,
-};
+module.exports = { cardsRouteValidation, cardsIdRouteValidation };
