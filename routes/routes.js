@@ -1,12 +1,10 @@
 const routes = require('express').Router();
-const { errors } = require('celebrate');
 const usersRouter = require('./users');
 const cardsRouter = require('./cards');
 const { login } = require('../controllers/login');
 const { createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 const { signinRouteValidation, signupRouteValidation } = require('../validators/sign/sign');
-const errorHandler = require('../errors/errorHandler');
 const DocumentNotFoundError = require('../errors/DocumentNotFoundError');
 
 routes.post('/signin', signinRouteValidation, login);
@@ -18,8 +16,5 @@ routes.use('/cards', auth, cardsRouter);
 routes.use('*', (req, res, next) => {
   next(new DocumentNotFoundError('Неправильный путь'));
 });
-
-routes.use(errors());
-routes.use(errorHandler);
 
 module.exports = routes;
