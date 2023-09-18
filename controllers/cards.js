@@ -21,7 +21,7 @@ module.exports.deleteCard = (req, res, next) => {
     .orFail()
     .then((card) => {
       if (card.owner.equals(req.user._id)) {
-        Card.findByIdAndRemove(req.params.id)
+        Card.deleteOne(card)
           .orFail()
           .then((deletedCard) => res.send({ data: deletedCard }));
       } else {
